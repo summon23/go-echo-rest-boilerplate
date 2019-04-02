@@ -6,7 +6,7 @@ import(
 	"github.com/labstack/echo"
 )
 
-func startServer() {
+func StartServer() {
 	e := echo.New()
 	e.GET("/", func (c echo.Context) error {
 		return c.String(http.StatusOK, "hell")
