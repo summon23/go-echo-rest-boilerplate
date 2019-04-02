@@ -1,4 +1,4 @@
-package main
+package app
 
 import(
 	"net/http"
@@ -6,7 +6,7 @@ import(
 	"github.com/labstack/echo"
 )
 
-func main() {
+func startServer() {
 	e := echo.New()
 	e.GET("/", func (c echo.Context) error {
 		return c.String(http.StatusOK, "hell")
