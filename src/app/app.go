@@ -3,6 +3,7 @@ package app
 import(
 	"database/sql"
 	"net/http"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"	
@@ -19,18 +20,19 @@ func dbConn() (db *sql.DB) {
 
 // StartServer run the server
 func StartServer() {
+	fmt.Println("test")
 	e := echo.New()
+	
+	e.GET("/eeff", func (c echo.Context) error {
+		return c.String(http.StatusOK, "hell")
+	})
 
 	registerMethod(User)
 	db := dbConn()
+	
 
 	userHandler := controller.User{}
 	userHandler.RegisterHandler(db, e)
-	// e.GET("/", func (c echo.Context) error {
-	// 	return c.String(http.StatusOK, "hell")
-	// })
 
-	// e.GET("/test", getData)
-	e.GET("/user", GetAllUser)
 	e.Logger.Fatal(e.Start(":1322"))
 }
