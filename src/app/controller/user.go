@@ -3,7 +3,8 @@ package controller
 import (
 	"database/sql"
 	"net/http"
-	"encoding/json"
+	"log"
+	// "encoding/json"
 
 	"github.com/labstack/echo"
 )
@@ -11,9 +12,9 @@ import (
 var conn *sql.DB
 
 type UserRecord struct {
-	id int
-	name string
-	email string
+	Id int `json:"id"`
+	Name string `json:"name"`
+	Email string `json:"email"`
 }
 
 type User struct {
@@ -22,6 +23,9 @@ type User struct {
 }
 
 func getList(c echo.Context) error {
+	// var arrResponse []UserRecord
+	var temp UserRecord
+
 	if conn == nil {
 		panic("db not connect")
 	}
@@ -30,20 +34,23 @@ func getList(c echo.Context) error {
 		panic(err.Error())
 	}
 
-	userList := UserRecord{}
+	log.Print(resDB)
+	defer resDB.Close()
+
 	for resDB.Next() {
-		var id int
-		var name, email string
-		err = resDB.Scan(&id, &name, &email)
+		log.Print("next")
+		err = resDB.Scan(&temp.Id, &temp.Name, &temp.Email)
+		log.Println(temp.Id, temp.Name)
 		if err != nil {
 			panic(err.Error())
 		}
-		userList.id = id
-		userList.name = name
-		userList.email = email
+		// arrResponse = append(arrResponse, temp)
 	}
-
-	r, err := json.Marshal(userList)
+	r := UserRecord{
+		Id: 1,
+		Name: "andry",
+		Email: "aaa"}
+	// r, err := json.Marshal(temp)
 	return c.JSON(http.StatusOK, r)
 }
 
@@ -63,7 +70,7 @@ func getOne(c echo.Context) error {
 func (r *User) RegisterHandler(DB *sql.DB, route *echo.Echo) {
 	r.db = DB
 	r.echo = route
-	
+	conn = DB
 	route.GET("/ee", func (c echo.Context) error {
 		return c.String(http.StatusOK, "hell")
 	})
