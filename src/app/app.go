@@ -27,7 +27,6 @@ func StartServer() {
 		return c.String(http.StatusOK, "hell")
 	})
 
-	registerMethod(User)
 	db := dbConn()
 	
 
